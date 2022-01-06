@@ -5,10 +5,12 @@ deploy:
     manifests:
       - './infra/k8s/*.yaml'
 build:
-  local:
-    push: false
+  # local:
+  #   push: false
+  googleCloudBuild:
+    projectId: neural-hour-337318
   artifacts:
-    - image: refbit/auth
+    - image: us.gcr.io/neural-hour-337318/auth
       context: auth
       docker:
         dockerfile: Dockerfile

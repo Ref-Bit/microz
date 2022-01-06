@@ -14,11 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: refbit/auth
-          resources:
-            limits:
-              memory: "128Mi"
-              cpu: "500m"
+          image: us.gcr.io/neural-hour-337318/auth
 ---
 apiVersion: v1
 kind: Service
