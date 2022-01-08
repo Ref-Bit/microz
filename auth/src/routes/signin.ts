@@ -1,6 +1,10 @@
 import { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
+import { BadRequestError } from '../errors/bad-request-error';
 import { validateRequest } from '../middlewares/validate-request';
+import { User } from '../models/User';
+import { PasswordHandler } from '../utils/password-handler';
+import JWT from 'jsonwebtoken';
 
 const router = Router();
 
@@ -14,8 +18,36 @@ router.post(
       .withMessage('Password field is required'),
   ],
   validateRequest,
-  (req: Request, res: Response) => {
-    res.json({});
+  async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    const existingUser = await User.findOne({ email });
+    if (!existingUser) {
+      throw new BadRequestError('Invalid Credentials');
+    }
+
+    const isMatchedPasswords = await PasswordHandler.toCompare(
+      existingUser.password,
+      password
+    );
+
+    if (!isMatchedPasswords) {
+      throw new BadRequestError('Invalid Credentials');
+    }
+
+    const userJWT = JWT.sign(
+      {
+        id: existingUser.id,
+        email: existingUser.email,
+      },
+      process.env.JWT_KEY!
+    );
+
+    req.session = {
+      jwt: userJWT,
+    };
+
+    res.status(200).json(existingUser);
   }
 );
 
