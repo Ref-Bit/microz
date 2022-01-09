@@ -4,7 +4,7 @@ import { verifyCurrentUser } from '../middlewares/verify-current-user';
 
 const router = Router();
 
-router.get('/current-user', verifyCurrentUser, requireAuth, (req, res) => {
+router.get('/current-user', verifyCurrentUser, (req, res) => {
   res.status(200).json({ currentUser: req.currentUser || null });
 });
 
