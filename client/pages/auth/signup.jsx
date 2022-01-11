@@ -1,14 +1,20 @@
 import Head from 'next/head';
 import { useState } from 'react';
+import { useRequest } from '../../hooks/useRequest';
+import Router from 'next/router';
 
 const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-
-    console.log(email, password);
+    await useRequest({
+      method: 'POST',
+      url: '/api/auth/signup',
+      body: { email, password },
+      onSuccess: () => Router.push('/'),
+    });
   };
 
   return (
@@ -48,7 +54,6 @@ const SignUp = () => {
               value={password}
               onChange={e => setPassword(e.target.value)}
             />
-            {/* <p className="text-red-500 text-xs italic">Please choose a password.</p> */}
           </div>
           <div className="flex items-center justify-between">
             <button
