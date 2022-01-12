@@ -8,7 +8,6 @@ const Home = ({ data: { currentUser } }) => {
         <title>Microz - Home</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
       <main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center">
         <h1 className="text-indigo-600 text-6xl font-title">
           {currentUser ? 'Welcome to Microz' : 'Microz'}
