@@ -1,16 +1,16 @@
 import Head from 'next/head';
 import { AuthForm } from '../components';
 
-const SignUp = () => {
+const SignIn = () => {
   return (
     <div>
       <Head>
-        <title>Microz - Sign Up</title>
+        <title>Microz - Sign In</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <AuthForm formTitle="Sign Up" />
+      <AuthForm formTitle="Sign In" />
     </div>
   );
 };
 
-export default SignUp;
+export default SignIn;
