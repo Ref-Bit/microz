@@ -1,6 +1,5 @@
 import { Router } from 'express';
-import { requireAuth } from '../middlewares/require-auth';
-import { verifyCurrentUser } from '../middlewares/verify-current-user';
+import { verifyCurrentUser } from '@refbit-ticketing/common';
 
 const router = Router();
 

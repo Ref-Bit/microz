@@ -2,8 +2,7 @@ import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser';
 import { AuthRouter } from './routes';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-found-error';
+import { errorHandler, NotFoundError } from '@refbit-ticketing/common';
 import cookieSession from 'cookie-session';
 
 const app = express();

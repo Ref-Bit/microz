@@ -1,7 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { body } from 'express-validator';
-import { BadRequestError } from '../errors/bad-request-error';
-import { validateRequest } from '../middlewares/validate-request';
+import { BadRequestError, validateRequest } from '@refbit-ticketing/common';
 import { User } from '../models/User';
 import { PasswordHandler } from '../utils/password-handler';
 import JWT from 'jsonwebtoken';
