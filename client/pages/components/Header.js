@@ -10,6 +10,7 @@ const Header = ({ currentUser }) => {
       method: 'POST',
       url: '/api/auth/signout',
       body: {},
+      toastMsg: 'Goodbye 👋🏻🙃',
       onSuccess: () => router.push('/'),
     });
   };

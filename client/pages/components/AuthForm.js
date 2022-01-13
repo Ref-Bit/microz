@@ -12,6 +12,7 @@ const AuthForm = ({ formTitle }) => {
       method: 'POST',
       url: `/api/auth/${formTitle.toLowerCase().replace(/\s/g, '')}`,
       body: { email, password },
+      toastMsg: 'Welcome Onboard 👋🏻😎',
       onSuccess: () => Router.push('/'),
     });
   };

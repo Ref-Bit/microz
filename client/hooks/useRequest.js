@@ -1,7 +1,7 @@
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
-const useRequest = async ({ method, url, body, onSuccess }) => {
+const useRequest = async ({ method, url, body, onSuccess, toastMsg }) => {
   try {
     const { data } = await axios({
       method,
@@ -10,7 +10,7 @@ const useRequest = async ({ method, url, body, onSuccess }) => {
     });
 
     if (onSuccess) {
-      onSuccess(toast.success('Welcome onboard!'));
+      onSuccess(toast.success(toastMsg));
     }
     return data;
   } catch (error) {
