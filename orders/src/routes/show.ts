@@ -2,7 +2,7 @@ import { Router, Request, Response } from 'express';
 
 const router = Router();
 
-router.put('/api/orders/:orderId', async (req: Request, res: Response) => {
+router.put('/:orderId', async (req: Request, res: Response) => {
   res.json({});
 });
 

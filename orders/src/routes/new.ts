@@ -14,7 +14,7 @@ const router = Router();
 const EXPIRATION_WINDOW = 15 * 60;
 
 router.post(
-  '/api/orders',
+  '/',
   requireAuth,
   [
     body('ticketId')

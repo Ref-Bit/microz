@@ -1,7 +1,7 @@
 import { Schema, model, Document } from 'mongoose';
 import { Order, OrderStatus } from './Order';
 
-interface ITicket extends Document {
+interface ITicket {
   title: string;
   price: number;
 }
