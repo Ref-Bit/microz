@@ -1,18 +1,16 @@
 import { Schema, model, Document } from 'mongoose';
+import { Order, OrderStatus } from './Order';
 
-export interface ITicket extends Document {
+interface ITicket extends Document {
   title: string;
   price: number;
 }
 
-/*
- export interface TicketDoc extends Document {
-  title: string;
-  price: number;
+export interface ITicketDoc extends Document, ITicket {
+  isReserved(): Promise<boolean>;
 }
-*/
 
-const TicketSchema = new Schema<ITicket>(
+const TicketSchema = new Schema<ITicketDoc>(
   {
     title: {
       type: String,
@@ -35,7 +33,22 @@ const TicketSchema = new Schema<ITicket>(
   }
 );
 
-const TicketModel = model<ITicket>('Ticket', TicketSchema);
+//! A ticket is reserved if it belongs to an Order, and the status is NOT OrderStatus.Cancelled
+TicketSchema.methods.isReserved = async function () {
+  const existingOrder = await Order.findOne({
+    ticket: this.id, // Ticket id
+    status: {
+      $in: [
+        OrderStatus.Created,
+        OrderStatus.AwaitingPayment,
+        OrderStatus.Complete,
+      ],
+    },
+  });
+  return !!existingOrder;
+};
+
+const TicketModel = model<ITicketDoc>('Ticket', TicketSchema);
 
 //! Necessary for Typescript to check passed arguments when creating a new Ticket
 class Ticket extends TicketModel {

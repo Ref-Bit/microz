@@ -1,12 +1,14 @@
 import { Schema, model } from 'mongoose';
 import { OrderStatus } from '@refbit-ticketing/common';
-import { ITicket as TicketDoc } from './Ticket';
+import { ITicketDoc } from './Ticket';
+
+export { OrderStatus };
 
 interface IOrder {
   userId: string;
   status: OrderStatus;
   expiresAt: Date;
-  ticket: TicketDoc;
+  ticket: ITicketDoc;
 }
 
 const OrderSchema = new Schema<IOrder>(
