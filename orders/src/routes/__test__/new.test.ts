@@ -19,7 +19,6 @@ it('Returns an error if ticket is already reserved', async () => {
     price: 20,
   });
   await ticket.save();
-  console.log('TICKET', ticket);
 
   const order = new Order({
     userId: 'random-user-id',
@@ -50,3 +49,5 @@ it('Reserves a ticket', async () => {
     .send({ ticketId: ticket.id })
     .expect(201);
 });
+
+it.todo('Emits an order created event');
