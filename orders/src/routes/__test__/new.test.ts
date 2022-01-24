@@ -3,6 +3,7 @@ import { app } from '../../app';
 import { Types } from 'mongoose';
 import { Ticket } from '../../models/Ticket';
 import { Order, OrderStatus } from '../../models/Order';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('Returns an error if ticket does not exist', async () => {
   const ticketId = new Types.ObjectId();
@@ -50,4 +51,18 @@ it('Reserves a ticket', async () => {
     .expect(201);
 });
 
-it.todo('Emits an order created event');
+it('Emits an order created event', async () => {
+  const ticket = new Ticket({
+    title: 'Test-Title',
+    price: 20,
+  });
+  await ticket.save();
+
+  await request(app)
+    .post('/api/orders')
+    .set('Cookie', getAuthCookie())
+    .send({ ticketId: ticket.id })
+    .expect(201);
+
+  expect(natsWrapper.client.publish).toHaveBeenCalled();
+});
