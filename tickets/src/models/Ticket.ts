@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 interface ITicket {
   title: string;
@@ -6,7 +7,11 @@ interface ITicket {
   userId: string;
 }
 
-const TicketSchema = new Schema<ITicket>(
+export interface ITicketDoc extends Document, ITicket {
+  version: number;
+}
+
+const TicketSchema = new Schema<ITicketDoc>(
   {
     title: {
       type: String,
@@ -26,13 +31,15 @@ const TicketSchema = new Schema<ITicket>(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.__v;
       },
     },
   }
 );
 
-const TicketModel = model<ITicket>('Ticket', TicketSchema);
+TicketSchema.set('versionKey', 'version');
+TicketSchema.plugin(updateIfCurrentPlugin);
+
+const TicketModel = model<ITicketDoc>('Ticket', TicketSchema);
 
 //! Necessary for Typescript to check passed arguments when creating a new Ticket
 class Ticket extends TicketModel {
