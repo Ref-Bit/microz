@@ -1,16 +1,29 @@
-import { Schema, model, Document } from 'mongoose';
+import mongoose from 'mongoose';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 import { Order, OrderStatus } from './Order';
 
-interface ITicket {
+interface TicketAttrs {
+  id: string;
   title: string;
   price: number;
 }
 
-export interface ITicketDoc extends Document, ITicket {
+export interface TicketDoc extends mongoose.Document {
+  title: string;
+  price: number;
+  version: number;
   isReserved(): Promise<boolean>;
 }
 
-const TicketSchema = new Schema<ITicketDoc>(
+interface TicketModel extends mongoose.Model<TicketDoc> {
+  build(attrs: TicketAttrs): TicketDoc;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketDoc | null>;
+}
+
+const ticketSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -18,8 +31,8 @@ const TicketSchema = new Schema<ITicketDoc>(
     },
     price: {
       type: Number,
-      min: 0,
       required: true,
+      min: 0,
     },
   },
   {
@@ -27,16 +40,31 @@ const TicketSchema = new Schema<ITicketDoc>(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.__v;
       },
     },
   }
 );
 
-//! A ticket is reserved if it belongs to an Order, and the status is NOT OrderStatus.Cancelled
-TicketSchema.methods.isReserved = async function () {
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
+ticketSchema.statics.findByEvent = (event: { id: string; version: number }) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
+ticketSchema.statics.build = (attrs: TicketAttrs) => {
+  return new Ticket({
+    _id: attrs.id,
+    title: attrs.title,
+    price: attrs.price,
+  });
+};
+ticketSchema.methods.isReserved = async function () {
+  // this === the ticket document that we just called 'isReserved' on
   const existingOrder = await Order.findOne({
-    ticket: this.id, // Ticket id
+    ticket: this as any,
     status: {
       $in: [
         OrderStatus.Created,
@@ -45,16 +73,10 @@ TicketSchema.methods.isReserved = async function () {
       ],
     },
   });
+
   return !!existingOrder;
 };
 
-const TicketModel = model<ITicketDoc>('Ticket', TicketSchema);
-
-//! Necessary for Typescript to check passed arguments when creating a new Ticket
-class Ticket extends TicketModel {
-  constructor(attrs: ITicket) {
-    super(attrs);
-  }
-}
+const Ticket = mongoose.model<TicketDoc, TicketModel>('Ticket', ticketSchema);
 
 export { Ticket };

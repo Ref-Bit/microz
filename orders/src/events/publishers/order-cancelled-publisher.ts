@@ -1,5 +1,5 @@
-import { Publisher, OrderCancelled, Subjects } from '@refbit-ticketing/common';
+import { Publisher, OrderCancelledEvent, Subjects } from '@refbit-ticketing/common';
 
-export class OrderCancelledPublisher extends Publisher<OrderCancelled> {
+export class OrderCancelledPublisher extends Publisher<OrderCancelledEvent> {
   readonly subject = Subjects.OrderCancelled;
 }

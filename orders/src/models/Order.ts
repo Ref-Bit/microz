@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { OrderStatus } from '@refbit-ticketing/common';
-import { ITicketDoc } from './Ticket';
+import { TicketDoc } from './Ticket';
+import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
 
 export { OrderStatus };
 
@@ -8,10 +9,14 @@ interface IOrder {
   userId: string;
   status: OrderStatus;
   expiresAt: Date;
-  ticket: ITicketDoc;
+  ticket: TicketDoc;
 }
 
-const OrderSchema = new Schema<IOrder>(
+interface IOrderDoc extends Document, IOrder {
+  version: number;
+}
+
+const OrderSchema = new Schema<IOrderDoc>(
   {
     userId: {
       type: String,
@@ -36,13 +41,15 @@ const OrderSchema = new Schema<IOrder>(
       transform(doc, ret) {
         ret.id = ret._id;
         delete ret._id;
-        delete ret.__v;
       },
     },
   }
 );
 
-const OrderModel = model<IOrder>('Order', OrderSchema);
+OrderSchema.set('versionKey', 'version');
+OrderSchema.plugin(updateIfCurrentPlugin);
+
+const OrderModel = model<IOrderDoc>('Order', OrderSchema);
 
 //! Necessary for Typescript to check passed arguments when creating a new Order
 class Order extends OrderModel {

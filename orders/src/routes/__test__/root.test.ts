@@ -1,9 +1,11 @@
 import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/Ticket';
+import { Types } from 'mongoose';
 
 const createTicket = async () => {
-  const ticket = new Ticket({
+  const ticket = Ticket.build({
+    id: new Types.ObjectId().toHexString(),
     title: 'Test-Title',
     price: 20,
   });

@@ -1,24 +1,24 @@
+import { Message } from 'node-nats-streaming';
 import {
-  Listener,
   Subjects,
+  Listener,
   TicketCreatedEvent,
 } from '@refbit-ticketing/common';
-import { Message } from 'node-nats-streaming';
 import { Ticket } from '../../models/Ticket';
 import { queueGroupName } from './queue-group-name';
 
 export class TicketCreatedListener extends Listener<TicketCreatedEvent> {
-  readonly subject = Subjects.TicketCreated;
+  subject: Subjects.TicketCreated = Subjects.TicketCreated;
   queueGroupName = queueGroupName;
 
   async onMessage(data: TicketCreatedEvent['data'], msg: Message) {
     const { id, title, price } = data;
-    const ticket = new Ticket({
+
+    const ticket = Ticket.build({
+      id,
       title,
       price,
     });
-    //! Setting the auto generated _id by mongo with the id of Ticket created by ticket service to match with order 
-    ticket.set({ _id: id });
     await ticket.save();
 
     msg.ack();
