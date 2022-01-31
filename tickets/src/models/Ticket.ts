@@ -9,6 +9,7 @@ interface ITicket {
 
 export interface ITicketDoc extends Document, ITicket {
   version: number;
+  orderId?: string;
 }
 
 const TicketSchema = new Schema<ITicketDoc>(
@@ -24,6 +25,9 @@ const TicketSchema = new Schema<ITicketDoc>(
     userId: {
       type: String,
       required: true,
+    },
+    orderId: {
+      type: String,
     },
   },
   {
