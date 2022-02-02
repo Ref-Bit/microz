@@ -1,33 +1,38 @@
-import { Schema, model } from 'mongoose';
-import { OrderStatus } from '@refbit-ticketing/common';
+import mongoose from 'mongoose';
 import { updateIfCurrentPlugin } from 'mongoose-update-if-current';
+import { OrderStatus } from '@refbit-ticketing/common';
 
-export { OrderStatus };
-
-interface IOrder {
-  userId: string;
-  status: OrderStatus;
-  price: number;
-}
-
-interface IOrderDoc extends Document, IOrder {
+interface OrderAttrs {
+  id: string;
   version: number;
+  userId: string;
+  price: number;
+  status: OrderStatus;
 }
 
-const OrderSchema = new Schema<IOrderDoc>(
+interface OrderDoc extends mongoose.Document {
+  version: number;
+  userId: string;
+  price: number;
+  status: OrderStatus;
+}
+
+interface OrderModel extends mongoose.Model<OrderDoc> {
+  build(attrs: OrderAttrs): OrderDoc;
+}
+
+const orderSchema = new mongoose.Schema(
   {
     userId: {
       type: String,
       required: true,
     },
-    status: {
-      type: String,
-      required: true,
-      enum: Object.values(OrderStatus),
-      default: OrderStatus.Created,
-    },
     price: {
       type: Number,
+      required: true,
+    },
+    status: {
+      type: String,
       required: true,
     },
   },
@@ -41,16 +46,19 @@ const OrderSchema = new Schema<IOrderDoc>(
   }
 );
 
-OrderSchema.set('versionKey', 'version');
-OrderSchema.plugin(updateIfCurrentPlugin);
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
-const OrderModel = model<IOrderDoc>('Order', OrderSchema);
+orderSchema.statics.build = (attrs: OrderAttrs) => {
+  return new Order({
+    _id: attrs.id,
+    version: attrs.version,
+    price: attrs.price,
+    userId: attrs.userId,
+    status: attrs.status,
+  });
+};
 
-//! Necessary for Typescript to check passed arguments when creating a new Order
-class Order extends OrderModel {
-  constructor(attrs: IOrder) {
-    super(attrs);
-  }
-}
+const Order = mongoose.model<OrderDoc, OrderModel>('Order', orderSchema);
 
 export { Order };
