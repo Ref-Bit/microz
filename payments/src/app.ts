@@ -7,6 +7,7 @@ import {
   verifyCurrentUser,
 } from '@refbit-ticketing/common';
 import cookieSession from 'cookie-session';
+import { PaymentsRouter } from './routes';
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.use(
   })
 );
 app.use(verifyCurrentUser);
-
+app.use(PaymentsRouter);
 app.all('*', async () => {
   throw new NotFoundError();
 });
