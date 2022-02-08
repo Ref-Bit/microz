@@ -59,11 +59,12 @@ it('Returns a 400 when purchasing a cancelled order', async () => {
 
 it('Returns a 204 with valid inputs', async () => {
   const userId = new Types.ObjectId().toHexString();
+  const price = Math.floor(Math.random() * 100000);
   const order = Order.build({
     id: new Types.ObjectId().toHexString(),
     version: 0,
     userId,
-    price: 99,
+    price,
     status: OrderStatus.Created,
   });
   await order.save();
@@ -77,9 +78,11 @@ it('Returns a 204 with valid inputs', async () => {
     })
     .expect(201);
 
-  const chargeOpts = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+  const stripeCharges = await stripe.charges.list({ limit: 50 });
+  const stripeCharge = stripeCharges.data.find(
+    charge => charge.amount === price * 100
+  );
 
-  expect(chargeOpts.source).toEqual('tok_mastercard');
-  expect(chargeOpts.amount).toEqual(99 * 100);
-  expect(chargeOpts.currency).toEqual('usd');
+  expect(stripeCharge).toBeDefined();
+  expect(stripeCharge!.currency).toEqual('usd');
 });
