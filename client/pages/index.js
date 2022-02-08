@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import { buildClient } from '../api/buildClient';
 
-const Home = ({ data: { currentUser } }) => {
+const Home = ({ currentUser }) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
       <Head>
@@ -20,9 +20,8 @@ const Home = ({ data: { currentUser } }) => {
   );
 };
 
-export async function getServerSideProps(ctx) {
-  const { data } = await buildClient(ctx).get('/api/auth/current-user');
-  return { props: { data } };
-}
+Home.getInitialProps = async (context, client, currentUser) => {
+  return {};
+};
 
 export default Home;
