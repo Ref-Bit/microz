@@ -4,6 +4,7 @@ import { Types } from 'mongoose';
 import { Order } from '../../models/Order';
 import { OrderStatus } from '@refbit-ticketing/common';
 import { stripe } from '../../stripe';
+import { Payment } from '../../models/Payment';
 
 it('Returns a 404 when purchasing an order that does not exist', async () => {
   await request(app)
@@ -85,4 +86,11 @@ it('Returns a 204 with valid inputs', async () => {
 
   expect(stripeCharge).toBeDefined();
   expect(stripeCharge!.currency).toEqual('usd');
+
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: stripeCharge!.id,
+  });
+
+  expect(payment).not.toBeNull();
 });
