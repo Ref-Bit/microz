@@ -2,8 +2,17 @@ import '../styles/globals.css';
 import { Toaster } from 'react-hot-toast';
 import BaseLayout from './components/BaseLayout';
 import { buildClient } from '../api/buildClient';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 function AppComponent({ Component, pageProps, currentUser }) {
+  const Router = useRouter();
+
+  useEffect(() => {
+    if (!currentUser) {
+      Router.replace('/');
+    }
+  }, [currentUser]);
   return (
     <main className="font-body bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 min-h-screen text-sm">
       <BaseLayout currentUser={currentUser}>
