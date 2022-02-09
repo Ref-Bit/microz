@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useState } from 'react';
 import { useRequest } from '../../hooks/useRequest';
+import Router from 'next/router';
 
 const NewTicket = () => {
   const [title, setTitle] = useState('');
@@ -20,7 +21,7 @@ const NewTicket = () => {
       url: '/api/tickets',
       body: { title, price },
       toastMsg: 'New ticket created 🎫✅',
-      onSuccess: ticket => console.log('Ticket created', ticket),
+      onSuccess: () => Router.push('/'),
     });
 
     setTitle('');
