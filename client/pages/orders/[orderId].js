@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
 import { useRequest } from '../../hooks/useRequest';
+import Router from 'next/router';
 
 const ShowOrder = ({ order, currentUser }) => {
   const [timeLeft, setTimeLeft] = useState(0);
@@ -12,7 +13,7 @@ const ShowOrder = ({ order, currentUser }) => {
       url: '/api/payments',
       body: { token: tokenId, orderId: order.id },
       toastMsg: 'Thank you for your payment 💳✅',
-      onSuccess: payment => console.log('Payment', payment),
+      onSuccess: () => Router.push('/orders'),
     });
   };
 
@@ -39,7 +40,7 @@ const ShowOrder = ({ order, currentUser }) => {
 
       <main>
         {timeLeft > 0 ? (
-        <div className="bg-gray-100 dark:bg-gray-700 w-1/3 shadow hover:shadow-xl border-l-4 hover:border-indigo-600 border-gray-600 rounded py-2 px-3 mx-auto space-y-4 duration-150">
+          <div className="bg-gray-100 dark:bg-gray-700 w-1/3 shadow hover:shadow-xl border-l-4 hover:border-indigo-600 border-gray-600 rounded py-2 px-3 mx-auto space-y-4 duration-150">
             <p>{timeLeft} seconds until order expires</p>
             <StripeCheckout
               token={({ id }) => handlePayment(id)}
