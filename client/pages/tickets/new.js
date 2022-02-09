@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { useState } from 'react';
+import { useRequest } from '../../hooks/useRequest';
 
 const NewTicket = () => {
   const [title, setTitle] = useState('');
@@ -13,7 +14,17 @@ const NewTicket = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    console.log('FORM_DATA', title, price);
+
+    await useRequest({
+      method: 'POST',
+      url: '/api/tickets',
+      body: { title, price },
+      toastMsg: 'New ticket created 🎫✅',
+      onSuccess: ticket => console.log('Ticket created', ticket),
+    });
+
+    setTitle('');
+    setPrice('');
   };
 
   return (

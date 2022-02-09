@@ -9,8 +9,11 @@ const useRequest = async ({ method, url, body, onSuccess, toastMsg }) => {
       data: body,
     });
 
+    console.log('USE_REQUEST_DATA', data);
+
     if (onSuccess) {
-      onSuccess(toast.success(toastMsg));
+      toast.success(toastMsg);
+      onSuccess(data);
     }
     return data;
   } catch (error) {
