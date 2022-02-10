@@ -46,7 +46,7 @@ const start = async () => {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB...🎫✅');
     app.listen(PORT, () =>
-      console.log(`Tickets service live on port ${PORT}...🚀`)
+      console.log(`Tickets service live on port ${PORT}...🎫🚀`)
     );
   } catch (error) {
     console.error(error);
