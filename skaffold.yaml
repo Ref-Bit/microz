@@ -10,7 +10,7 @@ build:
   googleCloudBuild:
     projectId: neural-hour-337318
   artifacts:
-    - image: us.gcr.io/neural-hour-337318/auth
+    - image: refbit/auth
       context: auth
       docker:
         dockerfile: Dockerfile
@@ -18,7 +18,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/neural-hour-337318/client
+    - image: refbit/client
       context: client
       docker:
         dockerfile: Dockerfile
@@ -26,7 +26,7 @@ build:
         manual:
           - src: "**/*.js*"
             dest: .
-    - image: us.gcr.io/neural-hour-337318/tickets
+    - image: refbit/tickets
       context: tickets
       docker:
         dockerfile: Dockerfile
@@ -34,7 +34,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/neural-hour-337318/orders
+    - image: refbit/orders
       context: orders
       docker:
         dockerfile: Dockerfile
@@ -42,7 +42,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/neural-hour-337318/expiration
+    - image: refbit/expiration
       context: expiration
       docker:
         dockerfile: Dockerfile
@@ -50,7 +50,7 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
-    - image: us.gcr.io/neural-hour-337318/payments
+    - image: refbit/payments
       context: payments
       docker:
         dockerfile: Dockerfile

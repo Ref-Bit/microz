@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: tickets
-          image: us.gcr.io/neural-hour-337318/tickets
+          image: refbit/tickets
           env:
             - name: MONGO_URI
               value: mongodb://tickets-mongo-srv:27017/tickets
