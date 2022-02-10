@@ -48,7 +48,7 @@ const start = async () => {
     new PaymentCreatedListener(natsWrapper.client).listen();
 
     await mongoose.connect(process.env.MONGO_URI);
-    console.log('Connected to MongoDB...📦✅');
+    console.log('Connected to MongoDB.....📦✅');
     app.listen(PORT, () =>
       console.log(`Orders service live on port ${PORT}...📦🚀`)
     );

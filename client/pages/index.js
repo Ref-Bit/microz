@@ -14,7 +14,7 @@ const Home = ({ currentUser, tickets }) => {
         </h1>
         {currentUser && (
           <div>
-            <p className="py-5">Your Email: {currentUser.email}</p>
+            <p className="py-5">Your email: {currentUser.email}</p>
             {tickets.length > 0 && (
               <div className="max-w-2xl mx-auto">
                 <div className="flex flex-col">
